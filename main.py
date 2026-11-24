@@ -43,6 +43,15 @@ def main() -> int:
     # No trailing newline: the file is exactly the line, nothing else.
     with open(path, "w", encoding="utf-8", newline="") as f:
         f.write(LINE)
+    # Verify the written file byte-for-byte: read it back and compare
+    # against the expected line before reporting success.
+    with open(path, "r", encoding="utf-8", newline="") as f:
+        written = f.read()
+    if written != LINE:
+        print(f"verify failed: file content differs from expected line "
+              f"({len(written)} chars written, {len(LINE)} expected)",
+              file=sys.stderr)
+        return 1
     print(f"wrote {len(LINE)} characters to {path}")
     return 0
 
